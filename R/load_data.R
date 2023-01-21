@@ -23,6 +23,7 @@ load_data = function()
     group_by(Site_Name, Collection_Date) |>
     tidyr::fill(.direction = "downup") |>
     slice_tail() |>
-    ungroup()
+    ungroup() |>
+    magrittr::set_attr("date", attr(presaved_data, "date"))
 
 }
