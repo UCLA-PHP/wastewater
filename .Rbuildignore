@@ -4,3 +4,7 @@
 dev_history.R
 ^dev$
 $run_dev.*
+xslx
+^inst/extdata/\~\$.*.xslx$
+^app\.R$
+^rsconnect$

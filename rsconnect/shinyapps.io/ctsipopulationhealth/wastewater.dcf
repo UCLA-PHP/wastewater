@@ -1,0 +1,11 @@
+name: wastewater
+title:
+username:
+account: ctsipopulationhealth
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 8089505
+bundleId: 6757348
+url: https://ctsipopulationhealth.shinyapps.io/wastewater/
+when: 1674264601.25114
+lastSyncTime: 1674264601.25115

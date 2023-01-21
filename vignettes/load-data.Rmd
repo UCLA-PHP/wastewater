@@ -1,0 +1,26 @@
+---
+title: "load-data"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{load-data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(wastewater)
+```
+
+```{r}
+
+data1 = vroom::vroom("http://publichealth.verily.com/api/csv")
+
+```
+
