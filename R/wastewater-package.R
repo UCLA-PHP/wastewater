@@ -10,5 +10,6 @@
 #' @importFrom shinydashboard box
 #' @importFrom stringr str_starts
 #' @importFrom tibble tibble
+#' @importFrom vroom vroom
 ## usethis namespace: end
 NULL
