@@ -93,7 +93,10 @@ app_ui <- function(request) {
             textOutput("last_connection_time"),
 
             br(),
-            actionButton(inputId = "reload_data",label = "Connect to Verily Database", class = "btn-success")
+            actionButton(
+              inputId = "reload_data",
+              label = "Connect to Verily Database",
+              class = "btn-success")
 
           ),
           mainPanel(

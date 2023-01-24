@@ -29,18 +29,19 @@ app_server <- function(input, output, session) {
   data_source =
     paste("Presaved data, downloaded ",
           attr(presaved_data, "date")) |>
-    reactiveVal()
+    reactiveVal(label = "data_source")
 
-  last_load_attempt = reactiveVal(NA)
-  last_load_result = reactiveVal(NA)
+  last_load_attempt = reactiveVal(label = "last load attempt")
+  last_load_result = reactiveVal(label = "last load result")
 
-  full_dataset = reactiveVal(presaved_data)
+  full_dataset = reactiveVal(presaved_data, label = "full_dataset")
 
   observeEvent(
+    label = "reload_data",
     eventExpr = input$reload_data,
     # ignoreNULL = TRUE,
-    ignoreNULL = FALSE, #IgnoreNull makes it run initially,
-    ignoreInit = FALSE, # ignoreInit makes it so it wont run twice (oddly)
+    ignoreNULL = FALSE, #IgnoreNull = FALSE makes it run initially,
+    ignoreInit = FALSE, # ignoreInit = TRUE makes it so it wont run twice if input$reload_data is generated dynamically
     {
       progress <- shiny::Progress$new()
       progress$set(message = "Loading in Data", value = 0)
@@ -71,9 +72,11 @@ app_server <- function(input, output, session) {
     })
 
   sites =
-    full_dataset() |>
-    get_sites() |>
-    reactive()
+    {
+      full_dataset() |>
+        get_sites()
+    } |>
+    reactive(label = "sites")
 
   updatePickerInput(
     session = session,
@@ -83,13 +86,18 @@ app_server <- function(input, output, session) {
       arrange(Plant) %$%
       split(x = Plant, f = State),
     selected = input$plants
-  ) |> observeEvent(sites())
+  ) |>
+    observeEvent(
+      eventExpr = sites(),
+      label = "update plants list")
 
-  output$data_source = renderText(data_source())
+  output$data_source = data_source() |> renderText()
   output$last_connection_time =
     glue::glue(
       as.character(last_load_attempt()),
-      " ({last_load_result()})") |>
+      " (",
+      last_load_result() |> as.character(),
+      ")") |>
     renderText()
 
   cur_subset =
@@ -98,7 +106,7 @@ app_server <- function(input, output, session) {
       Plant %in% input$plants,
       Collection_Date %within% (input$dates |> lubridate::int_diff())
     ) |>
-    reactive()
+    reactive(label = "cur_subset")
 
   output$downloadData <- downloadHandler(
     filename = function() {
@@ -108,11 +116,8 @@ app_server <- function(input, output, session) {
         '.csv',
         sep = '')
     },
-    content = function(con) {
-      write.csv(chart1(), con)
-    }
+    content = function(con) write.csv(chart1(), con)
   )
-
 
   y_var_name =
     input$virus |>
@@ -122,7 +127,7 @@ app_server <- function(input, output, session) {
         input$normalize,
         measures[2],
         measures[1])) |>
-    reactive()
+    reactive(label = "y_var_name")
 
   chart1 =
     {
@@ -143,7 +148,7 @@ app_server <- function(input, output, session) {
         ) |>
         shewhart.hybrid::I_Chart(
           Lim_Min = input$Lim_Min |> ceiling(),
-          extra_vars = names(full_dataset()),
+          extra_vars = names(cur_subset()),
           verbose = TRUE,
           ymin = 0,
           digits = 3,
@@ -161,7 +166,7 @@ app_server <- function(input, output, session) {
         suppressWarnings()
 
     } |>
-    reactive()
+    reactive(label = "chart1")
   # eventReactive(
   #   # ignoreNULL = FALSE,
   #   eventExpr = input$goButton)

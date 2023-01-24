@@ -1,14 +1,18 @@
 get_sites = function(dataset)
 {
   static_info =
-    presaved_data |>
+    dataset |>
     select(
       City:County_FIPS,
       -Population_Served
     )
 
   check_for_variations =
-    static_info |> group_by(Site_Name) |> unique() |> count() |> filter(n() != 1)
+    static_info |>
+    group_by(Site_Name) |>
+    unique() |>
+    count() |>
+    filter(n() != 1)
 
   stopifnot(nrow(check_for_variations) == 0)
 

@@ -24,7 +24,8 @@ Imports:
     shinydashboard,
     stringr,
     tibble,
-    vroom
+    vroom,
+    reactlog
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.2.3
