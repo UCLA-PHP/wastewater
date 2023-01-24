@@ -15,7 +15,17 @@ targets = list(
     c(
       "Influenza A" = "Influenza_A",
       "Influenza B" = "Influenza_B"
-    )
+    ),
+
+  "RSV" = c("RSV" = "RSV"),
+
+  "MPXV" = c("MPXV" = "MPXV_G2R"),
+
+  "Norovirus" = c("Norovirus GII" = "Noro_G2"),
+
+  "hMPV" = c("hMPV" = "HMPV_4")
+
+
 )
 
 targets_rev =
