@@ -49,7 +49,7 @@ app_ui <- function(request) {
                 liveSearch = TRUE,
                 dropupAuto = TRUE
               ),
-              # multiple = TRUE,
+              multiple = TRUE,
               label = "Monitoring Location",
               choices =
                 sites |>
@@ -113,8 +113,11 @@ app_ui <- function(request) {
                 label = "PMMoV Normalized",
                 value = TRUE),
 
-              plotly::plotlyOutput("graph1") |> fluidRow()
-            )
+              plotly::plotlyOutput("graph1") |> fluidRow(),
+              h2("Rates per Site"),
+              plotly::plotlyOutput("graph2") |> fluidRow()
+            ) ,
+
           )
         )
       )
