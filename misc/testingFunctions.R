@@ -1,6 +1,10 @@
 
 unique(wastewater$Plant[wastewater$State == "Florida"]) |> group_by()
 plotly::plot_ly(presaved_data[presaved_data$State == "Florida", ], x = ~Collection_Date, y = ~SC2_N_norm_PMMoV, color = ~Site_Name, type = "scatter", mode = "lines+markers")
+
+presaved_data[presaved_data$State == "Florida", ] |> plotly::plot_ly(x = ~Collection_Date, y = group_by(Collection_Date) |> summarise(Count = n()), color = ~Site_Name, type = "scatter", mode = "lines+markers")
+presaved_data[presaved_data$State == "Florida", ] |> group_by(Collection_Date) |> summarise( Count= n()) |> plotly::plot_ly(x = ~Collection_Date, y = ~Count, type = "scatter", mode = "markers")
+
 #The example to use
 test = wastewater |>
   dplyr::mutate(

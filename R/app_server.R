@@ -214,12 +214,29 @@ app_server <- function(input, output, session) {
       type = "scatter",
       mode = "lines+markers"
     ) |>
-      plotly::layout(yaxis = list(title = yname()),
+      plotly::layout(title = "Rates per Site",
+                     yaxis = list(title = yname()),
                      xaxis = list(title = NA),
                      legend = list(orientation = 'h')
       )
 
   } |> reactive(label = "chart2")
+
+  chart3 = {
+    cur_subset() |>
+      group_by(Collection_Date) |>
+      summarise(Locations = n()) |>
+      plotly::plot_ly(
+        x = ~Collection_Date,
+        y = ~Locations,
+        type = "bar",
+        mode = "lines"
+      ) |>
+      plotly::layout(title = "Number of Locations",
+        xaxis = list(title = NA)
+        )
+
+  } |> reactive(label = "chart3")
   # }
   # else{
   #   cur_subset() |>
@@ -382,14 +399,24 @@ app_server <- function(input, output, session) {
            "Concentration (copies per gram)")
   })
 
-  extraPlot <- reactive({
+  individualSitesPlot <- reactive({
     if(length(input$plants) > 1){
-      output = chart2()
+      output_ISP = chart2()
     }
     else{
-      output = NULL
+      output_ISP = NULL
     }
-    output
+    output_ISP
+  })
+
+  locationsPlot <- reactive({
+    if(length(input$plants) > 1){
+      output_LP = chart3()
+    }
+    else{
+      output_LP = NULL
+    }
+    output_LP
   })
 
   output$graph1 =
@@ -410,7 +437,10 @@ app_server <- function(input, output, session) {
   #   verbose = TRUE) |>
   plotly::renderPlotly()
 
-  output$graph2 = extraPlot() |>
+  output$graph2 = individualSitesPlot() |>
+    plotly::renderPlotly()
+
+  output$graph3 = locationsPlot() |>
     plotly::renderPlotly()
 
 }
