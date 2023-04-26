@@ -112,6 +112,29 @@ app_ui <- function(request) {
                 inputId = "normalize",
                 label = "PMMoV Normalized",
                 value = TRUE),
+              htmltools::htmlDependencies(icon("")),
+              tags$style('
+        .plot-zoom {
+            position: absolute;
+            border: none;
+            background-color: transparent;
+            bottom: 0;
+            right: 0;
+
+        }
+        .full-screen {
+            position: fixed;
+            height: 98vh !important;
+            width: 98vw !important;
+            left: 0;
+            top: 0;
+            z-index: 9999;
+            overflow: hidden;
+        }
+        '
+              ),
+              div(
+                class = "plotly-full-screen",
               fluidRow(
                 column(
                   width = 6,
@@ -120,6 +143,13 @@ app_ui <- function(request) {
                 column(
                   width = 6,
                   #h2("Rates per Site"),
+                  plotly::plotlyOutput("graph4")
+                )
+                ),
+              fluidRow(
+                column(
+                  width = 6,
+                  #h2("Number of Locations"),
                   plotly::plotlyOutput("graph2")
                 ),
                 column(
@@ -128,13 +158,68 @@ app_ui <- function(request) {
                   plotly::plotlyOutput("graph3")
                 )
               )
-              ),
+            )
+          ),
+          tags$script(HTML("
+        function plotZoom(el){
+            el = $(el);
+            var parent = el.parent().parent();
+            if(el.attr('data-full_screen') === 'false') {
+                parent.addClass('full-screen').trigger('resize').fadeOut().fadeIn();
+                el.attr('data-full_screen', 'true');
+            } else {
+                parent.removeClass('full-screen').trigger('resize').fadeOut().fadeIn();
+                el.attr('data-full_screen', 'false');
+            }
+        }
+
+        $(function(){
+           $('.plotly-full-screen  .plotly.html-widget').append(
+            `
+            <div style='position: relative;'>
+                <button onclick=plotZoom(this) class='plot-zoom' data-full_screen='false' title='Full screen'>
+                    <i class='fa fa-expand-arrows-alt'></i>
+                </button>
+            </div>
+            `);
+        })
+        "))
             #   plotly::plotlyOutput("graph1") |> fluidRow(column(width = 6)),
             #   h2("Rates per Site"),
             #   plotly::plotlyOutput("graph2") |> fluidRow(column(width = 6)),
             #   h2("Number of Locations"),
             #   plotly::plotlyOutput("graph3") |> fluidRow(column(width = 6))
             # ) ,
+
+            # shinydashboard::box(
+            #   width = 12,
+            #
+            #   checkboxInput(
+            #     inputId = "normalize",
+            #     label = "PMMoV Normalized",
+            #     value = TRUE),
+            #   fluidRow(
+            #     column(
+            #       width = 6,
+            #       plotly::plotlyOutput("graph1")
+            #     ),
+            #     column(
+            #       width = 6,
+            #       #h2("Rates per Site"),
+            #       plotly::plotlyOutput("graph2")
+            #     ),
+            #     column(
+            #       width = 6,
+            #       #h2("Number of Locations"),
+            #       plotly::plotlyOutput("graph3")
+            #     ),
+            #     column(
+            #       width = 6,
+            #       #h2("Number of Locations"),
+            #       plotly::plotlyOutput("graph4")
+            #     )
+            #   )
+            # ),
 
           )
         )

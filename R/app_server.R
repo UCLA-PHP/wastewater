@@ -166,8 +166,41 @@ app_server <- function(input, output, session) {
 
           )
       }
+      # else{
+      #   message("XBAR CALC")
+      #   cur_subset() |>
+      #     dplyr::mutate(
+      #       date = Collection_Date,
+      #       place = Plant,
+      #       Dot = .data[[y_var_name()]]
+      #     ) |>
+      #     group_by(date) |>
+      #     summarise(
+      #       .groups = "drop",
+      #       count = sum(!is.na(Dot)),
+      #       Dot_mn = mean(Dot, na.rm = TRUE),
+      #       Dot_sd = sd(Dot, na.rm = TRUE)
+      #     )|>
+      #     shewhart.hybrid::XBar_Chart(
+      #       Lim_Min = input$Lim_Min |> ceiling(),
+      #       extra_vars = names(cur_subset()),
+      #       verbose = TRUE,
+      #       ymin = 0,
+      #       digits = 3,
+      #       multiplier = if_else(input$normalize, 100, 1),
+      #       groups = "Monitoring Locations",
+      #       observations =
+      #         if_else(input$normalize,
+      #                 "Mean Measured relative concentration",
+      #                 "Mean Measured concentration"),
+      #       suffix =
+      #         if_else(input$normalize,
+      #                 "%",
+      #                 " copies per gram")
+      #
+      #     )}|>
       else{
-        message("XBAR CALC")
+        message("S CALC")
         cur_subset() |>
           dplyr::mutate(
             date = Collection_Date,
@@ -198,7 +231,7 @@ app_server <- function(input, output, session) {
                       "%",
                       " copies per gram")
 
-          )}|>
+          )} |>
         suppressWarnings()
 
     } |>
@@ -233,10 +266,66 @@ app_server <- function(input, output, session) {
         mode = "lines"
       ) |>
       plotly::layout(title = "Number of Locations",
-        xaxis = list(title = NA)
+        xaxis = list(title = NA),
+        yaxis = list(rangemode = "tozero"),
+        updatemenus = list(
+          list(
+            type = "buttons",
+            #y = 0.8,
+            buttons = list(
+
+              list(
+                method = "restyle",
+                args = list("type", "bar"),
+                label = "Bar Chart"),
+
+              list(
+                method = "restyle",
+                args = list("type", "scatter"),
+                label = "Line Plot")
+              )
+            )
+
+          )
         )
 
+
   } |> reactive(label = "chart3")
+
+  chart4 = {
+    cur_subset() |>
+      dplyr::mutate(
+        date = Collection_Date,
+        place = Plant,
+        Dot = .data[[y_var_name()]]
+      ) |>
+      group_by(date) |>
+      summarise(
+        .groups = "drop",
+        count = sum(!is.na(Dot)),
+        Dot_sd = sd(Dot, na.rm = TRUE)
+      )|>
+      shewhart.hybrid::S_Chart(
+        Lim_Min = input$Lim_Min |> ceiling(),
+        extra_vars = names(cur_subset()),
+        verbose = TRUE,
+        ymin = 0,
+        digits = 3,
+        multiplier = if_else(input$normalize, 100, 1),
+        groups = "Monitoring Locations",
+        observations =
+          if_else(input$normalize,
+                  "Measured relative concentration",
+                  "Measured concentration"),
+        suffix =
+          if_else(input$normalize,
+                  "%",
+                  " copies per gram")
+
+      ) |>
+    suppressWarnings()
+  } |> reactive(label = "chart4")
+
   # }
   # else{
   #   cur_subset() |>
@@ -376,6 +465,7 @@ app_server <- function(input, output, session) {
       message("XBAR")
       mainPlot <- chart1() |>
         shewhart.hybrid::plot_run_chart(
+          title = "X-Bar Chart",
           yvarname = "Observed Mean",
           mode1 = "lines",
           marker_size = ~count,
@@ -384,7 +474,7 @@ app_server <- function(input, output, session) {
             if_else(input$normalize,
                     "%",
                     " copies per gram"),
-          yname = yname(),
+          yname = yname_Mean(),
           point_name = "Observed value",
           digits = 3,
           verbose = TRUE)
@@ -397,6 +487,16 @@ app_server <- function(input, output, session) {
     ifelse(input$normalize,
            "Relative concentration (%)",
            "Concentration (copies per gram)")
+  })
+  yname_Mean <- reactive({
+    ifelse(input$normalize,
+           "Mean Relative concentration (%)",
+           "Mean Concentration (copies per gram)")
+  })
+  yname_SD <- reactive({
+    ifelse(input$normalize,
+           "SD of Relative concentration (%)",
+           "SD of Concentration (copies per gram)")
   })
 
   individualSitesPlot <- reactive({
@@ -417,6 +517,32 @@ app_server <- function(input, output, session) {
       output_LP = NULL
     }
     output_LP
+  })
+
+  sPlot <- reactive({
+    if(length(input$plants) > 1){
+      output_SP <- chart4() |>
+        shewhart.hybrid::plot_run_chart(
+          title = "S Chart",
+          yvarname = "Observed SD",
+          mode1 = "lines",
+          marker_size = ~count,
+          marker_size_range = c(20,100),
+          multiplier = if_else(input$normalize, 100, 1),
+          suffix =
+            if_else(input$normalize,
+                    "%",
+                    " copies per gram"),
+          yname = yname_SD(),
+          point_name = "Observed value",
+          digits = 3,
+          verbose = TRUE)
+
+    }
+    else{
+      output_SP = NULL
+    }
+    output_SP
   })
 
   output$graph1 =
@@ -441,6 +567,9 @@ app_server <- function(input, output, session) {
     plotly::renderPlotly()
 
   output$graph3 = locationsPlot() |>
+    plotly::renderPlotly()
+
+  output$graph4 = sPlot() |>
     plotly::renderPlotly()
 
 }
