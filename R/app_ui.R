@@ -184,42 +184,7 @@ app_ui <- function(request) {
             `);
         })
         "))
-            #   plotly::plotlyOutput("graph1") |> fluidRow(column(width = 6)),
-            #   h2("Rates per Site"),
-            #   plotly::plotlyOutput("graph2") |> fluidRow(column(width = 6)),
-            #   h2("Number of Locations"),
-            #   plotly::plotlyOutput("graph3") |> fluidRow(column(width = 6))
-            # ) ,
 
-            # shinydashboard::box(
-            #   width = 12,
-            #
-            #   checkboxInput(
-            #     inputId = "normalize",
-            #     label = "PMMoV Normalized",
-            #     value = TRUE),
-            #   fluidRow(
-            #     column(
-            #       width = 6,
-            #       plotly::plotlyOutput("graph1")
-            #     ),
-            #     column(
-            #       width = 6,
-            #       #h2("Rates per Site"),
-            #       plotly::plotlyOutput("graph2")
-            #     ),
-            #     column(
-            #       width = 6,
-            #       #h2("Number of Locations"),
-            #       plotly::plotlyOutput("graph3")
-            #     ),
-            #     column(
-            #       width = 6,
-            #       #h2("Number of Locations"),
-            #       plotly::plotlyOutput("graph4")
-            #     )
-            #   )
-            # ),
 
           )
         )
