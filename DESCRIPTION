@@ -18,7 +18,7 @@ Imports:
     magrittr,
     pkgload,
     plotly,
-    shewhart.hybrid,
+    shewhart.hybrid (>= 0.1.0),
     shiny (>= 1.7.3),
     shinyWidgets,
     shinydashboard,
@@ -37,3 +37,5 @@ Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
+Remotes:  
+    UCLA-PHP/shewhart.hybrid@derekBranch

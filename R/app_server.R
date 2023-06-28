@@ -21,7 +21,6 @@ app_server <- function(input, output, session) {
 
   onBookmarked(
     function(url) {
-      # updateQueryString(url)
       showBookmarkUrlModal(url)
     }
   )
@@ -39,7 +38,6 @@ app_server <- function(input, output, session) {
   observeEvent(
     label = "reload_data",
     eventExpr = input$reload_data,
-    # ignoreNULL = TRUE,
     ignoreNULL = FALSE, #IgnoreNull = FALSE makes it run initially,
     ignoreInit = FALSE, # ignoreInit = TRUE makes it so it wont run twice if input$reload_data is generated dynamically
     {
@@ -129,6 +127,14 @@ app_server <- function(input, output, session) {
         measures[1])) |>
     reactive(label = "y_var_name")
 
+  filterData =  cur_subset() |>
+    dplyr::mutate(
+      date = Collection_Date,
+      place = Plant,
+      Dot = .data[[y_var_name()]]
+    ) |>
+    reactive(label = "filterData")
+
   chart1 =
     {
       progressData <- shiny::Progress$new(session = session, min = 0, max = 1)
@@ -142,11 +148,7 @@ app_server <- function(input, output, session) {
       validate(need(input$Lim_Min > 0, "Need a minimum phase length > 0."))
 
       if(length(input$plants) == 1){
-        cur_subset() |>
-          dplyr::mutate(
-            date = Collection_Date,
-            Dot = .data[[y_var_name()]]
-          ) |>
+        filterData() |>
           shewhart.hybrid::I_Chart(
             Lim_Min = input$Lim_Min |> ceiling(),
             extra_vars = names(cur_subset()),
@@ -167,12 +169,7 @@ app_server <- function(input, output, session) {
       }
 
       else{
-        cur_subset() |>
-          dplyr::mutate(
-            date = Collection_Date,
-            place = Plant,
-            Dot = .data[[y_var_name()]]
-          ) |>
+          filterData()  |>
           group_by(date) |>
           summarise(
             .groups = "drop",
@@ -237,7 +234,6 @@ app_server <- function(input, output, session) {
         updatemenus = list(
           list(
             type = "buttons",
-            #y = 0.8,
             buttons = list(
 
               list(
@@ -259,12 +255,7 @@ app_server <- function(input, output, session) {
   } |> reactive(label = "chart3")
 
   chart4 = {
-    cur_subset() |>
-      dplyr::mutate(
-        date = Collection_Date,
-        place = Plant,
-        Dot = .data[[y_var_name()]]
-      ) |>
+      filterData()  |>
       group_by(date) |>
       summarise(
         .groups = "drop",
@@ -314,8 +305,9 @@ app_server <- function(input, output, session) {
         shewhart.hybrid::plot_run_chart(
           title = "X-Bar Chart",
           yvarname = "Observed Mean",
-          mode1 = "lines",
+          modeUpper = "lines+markers",
           marker_size = ~count,
+          marker_size_range = c(20,100),
           multiplier = if_else(input$normalize, 100, 1),
           suffix =
             if_else(input$normalize,
@@ -372,7 +364,7 @@ app_server <- function(input, output, session) {
         shewhart.hybrid::plot_run_chart(
           title = "S Chart",
           yvarname = "Observed SD",
-          mode1 = "lines",
+          modeUpper = "lines",
           marker_size = ~count,
           marker_size_range = c(20,100),
           multiplier = if_else(input$normalize, 100, 1),
