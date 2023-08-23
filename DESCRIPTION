@@ -38,4 +38,4 @@ Suggests:
     rmarkdown
 VignetteBuilder: knitr
 Remotes:  
-    UCLA-PHP/shewhart.hybrid@derekBranch
+    UCLA-PHP/shewhart.hybrid
