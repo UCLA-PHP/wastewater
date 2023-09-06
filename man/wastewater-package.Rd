@@ -4,9 +4,9 @@
 \name{wastewater-package}
 \alias{wastewater}
 \alias{wastewater-package}
-\title{wastewater: An Amazing Shiny App}
+\title{wastewater: Wastewater Surveillance Dashboard}
 \description{
-What the package does (one paragraph).
+Monitors the wastewater concentrations of various viruses using Shewhart Control I-, X-Bar-, and S-Charts.
 }
 \seealso{
 Useful links:
@@ -17,7 +17,12 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: firstname lastname \email{your@email.com}
+\strong{Maintainer}: Doug Ezra Morrison \email{demorrison@ucdavis.edu} (\href{https://orcid.org/0000-0002-7195-830X}{ORCID})
+
+Authors:
+\itemize{
+  \item Derek Pham
+}
 
 }
 \keyword{internal}

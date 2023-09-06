@@ -8,3 +8,4 @@ xslx
 ^inst/extdata/\~\$.*.xslx$
 ^app\.R$
 ^rsconnect$
+^LICENSE\.md$
