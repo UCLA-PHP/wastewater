@@ -5,7 +5,7 @@
 \alias{presaved_data}
 \title{Wastewater data by measurement site}
 \format{
-An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 13727 rows and 114 columns.
+An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 14900 rows and 121 columns.
 }
 \usage{
 presaved_data

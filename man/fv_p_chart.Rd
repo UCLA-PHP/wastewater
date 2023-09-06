@@ -12,7 +12,7 @@ fv_p_chart(
 )
 }
 \arguments{
-\item{dataset}{some subset of `presaved_CDC_data`}
+\item{dataset}{some subset of \code{presaved_CDC_data}}
 
 \item{...}{arguments passed to shewhart.hybrid::PH_Chart(...)}
 }
