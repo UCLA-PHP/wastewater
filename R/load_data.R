@@ -1,13 +1,17 @@
 load_data = function()
 {
   presaved_data =
-    vroom::vroom("http://publichealth.verily.com/api/csv") |>
+    vroom::vroom(
+      "http://publichealth.verily.com/api/csv",
+      col_types = vroom_spec
+      ) |>
     suppressMessages() |>
     mutate(Plant =
-             Plant |> setNames(glue::glue("{Plant}: {Site_Name}")))
+             Plant |> setNames(glue::glue("{Plant}: {Site_Name}"))) |>
+    structure(
+      "date" = Sys.time(),
+      "source" = "http://publichealth.verily.com/api/csv")
 
-  attr(presaved_data, "date") = Sys.time()
-  attr(presaved_data, "source") = "http://publichealth.verily.com/api/csv"
   duplicates =
     presaved_data |>
     janitor::get_dupes(Site_Name, Collection_Date)
@@ -15,6 +19,10 @@ load_data = function()
   if(nrow(duplicates) != 0)
   {
     warning(nrow(duplicates), " duplicate records found")
+    if(nrow(duplicates) < 10)
+    {
+      print(duplicates)
+    }
 
   }
 
