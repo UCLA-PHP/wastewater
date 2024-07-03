@@ -2,7 +2,7 @@ load_data = function()
 {
   presaved_data =
     vroom::vroom(
-      "http://publichealth.verily.com/api/csv",
+      "https://storage.googleapis.com/wastewater-dev-data/scan.csv",
       col_types = vroom_spec
       ) |>
     suppressMessages() |>
@@ -10,7 +10,7 @@ load_data = function()
              Plant |> setNames(glue::glue("{Plant}: {Site_Name}"))) |>
     structure(
       "date" = Sys.time(),
-      "source" = "http://publichealth.verily.com/api/csv")
+      "source" = "https://storage.googleapis.com/wastewater-dev-data/scan.csv")
 
   duplicates =
     presaved_data |>
