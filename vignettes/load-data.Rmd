@@ -20,7 +20,7 @@ library(wastewater)
 
 ```{r}
 
-data1 = vroom::vroom("http://publichealth.verily.com/api/csv")
+data1 = vroom::vroom("https://storage.googleapis.com/wastewater-dev-data/scan.csv")
 
 ```
 
