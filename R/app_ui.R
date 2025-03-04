@@ -55,7 +55,7 @@ app_ui <- function(request) {
                 sites |>
                 arrange(Plant) %$%
                 split(x = Plant, f = State),
-              selected = "Los Angeles, CA"
+              selected = "Davis, CA"
 
             ),
 
