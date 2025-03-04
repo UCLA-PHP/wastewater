@@ -1,9 +1,5 @@
 Package: wastewater
-<<<<<<< HEAD
-Title: Graphs of viruses in wastewater
-=======
 Title: Wastewater Surveillance Dashboard
->>>>>>> a44d7a3859edfc7d449517845bbc00893be22a81
 Version: 0.0.0.9000
 Authors@R: c(
     person(given = "Doug Ezra",
