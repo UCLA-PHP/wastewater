@@ -9,3 +9,5 @@ xslx
 ^app\.R$
 ^rsconnect$
 ^LICENSE\.md$
+^AGENTS\.md$
+^\.claude$
